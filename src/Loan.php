@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Invest;
 
@@ -24,7 +25,6 @@ class Loan
      */
     private $tranches;
     
-
     /**
      * Loan constructor.
      * @param DateTime $startDate
