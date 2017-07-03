@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Invest;
 
-class Tranche implements TrancheInterface
+class Tranche
 {
     /**
      * @var string

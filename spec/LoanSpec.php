@@ -5,7 +5,7 @@ namespace spec\Invest;
 
 use DateTime;
 use Invest\Loan;
-use Invest\TrancheInterface;
+use Invest\Tranche;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -34,8 +34,8 @@ class LoanSpec extends ObjectBehavior
     }
 
     function it_exposes_the_tranches(
-        TrancheInterface $trancheOne,
-        TrancheInterface $trancheTwo
+        Tranche $trancheOne,
+        Tranche $trancheTwo
     ) {
         // Arrange
         $startDate = new DateTime('yesterday');

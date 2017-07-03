@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace spec\Invest;
 
 use Invest\Tranche;
-use Invest\TrancheInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
@@ -14,12 +13,6 @@ class TrancheSpec extends ObjectBehavior
     {
         // Arrange
         $this->beConstructedWith('A', (float)3, 1000.00);
-    }
-
-    function it_implements_the_correct_interface()
-    {
-        // Assert
-        $this->shouldImplement(TrancheInterface::class);
     }
 
     function it_exposes_the_name()

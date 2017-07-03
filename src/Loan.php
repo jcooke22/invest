@@ -21,7 +21,7 @@ class Loan
     private $endDate;
 
     /**
-     * @var TrancheInterface[]
+     * @var Tranche[]
      */
     private $tranches;
     
@@ -57,7 +57,7 @@ class Loan
      * 
      * @return void
      */
-    public function addTranche(TrancheInterface $tranche)
+    public function addTranche(Tranche $tranche)
     {
         $this->tranches[] = $tranche;
     }
