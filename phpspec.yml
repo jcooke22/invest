@@ -1,0 +1,4 @@
+suites:
+     invest_suite:
+         namespace: Invest
+         psr4_prefix: Invest
