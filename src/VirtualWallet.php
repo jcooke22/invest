@@ -21,7 +21,7 @@ class VirtualWallet
      */
     public function add(float $amount): self
     {
-        $this->balance = bcadd($this->balance, $amount, static::PRECISION);
+        $this->balance = (float)bcadd((string)$this->balance, (string)$amount, static::PRECISION);
 
         return $this;
     }
@@ -35,12 +35,17 @@ class VirtualWallet
      */
     public function subtract(float $amount): self
     {
-        if (bccomp(bcsub($this->balance, $amount, static::PRECISION), 0, static::PRECISION) === -1) {
+        if (bccomp(
+                (string)bcsub((string)$this->balance, (string)$amount, static::PRECISION),
+                (string)0,
+                static::PRECISION
+            ) === -1
+        ) {
             throw new VirtualWalletInsufficientBalance(
                 sprintf("Cannot subtract %s from balance %s", $amount, $this->balance)
             );
         }
-        $this->balance = bcsub($this->balance, $amount, static::PRECISION);
+        $this->balance = (float)bcsub((string)$this->balance, (string)$amount, static::PRECISION);
 
         return $this;
     }
