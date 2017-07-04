@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace spec\Invest;
 
+use Invest\Exception\InvestmentAmountTooLarge;
+use Invest\Investment;
 use Invest\Loan;
 use Invest\Tranche;
 use PhpSpec\ObjectBehavior;
@@ -39,5 +41,32 @@ class TrancheSpec extends ObjectBehavior
         // Act / Assert
         $this->setLoan($loan);
         $this->getLoan()->shouldReturn($loan);
+    }
+
+    function it_exposes_investments(
+        Investment $investmentOne,
+        Investment $investmentTwo
+    ) {
+        // Arrange
+        $investmentOne->amount()->willReturn(999.10);
+        $investmentTwo->amount()->willReturn(0.90);
+
+        // Act / Assert
+        $this->addInvestment($investmentOne);
+        $this->addInvestment($investmentTwo);
+        $this->getInvestments()->shouldReturn([$investmentOne, $investmentTwo]);
+    }
+
+    function it_throws_an_exception_if_the_investment_breaches_the_maximum_amount(
+        Investment $investmentOne,
+        Investment $investmentTwo
+    ) {
+        // Arrange
+        $investmentOne->amount()->willReturn(999.10);
+        $investmentTwo->amount()->willReturn(0.91);
+
+        // Act / Assert
+        $this->addInvestment($investmentOne);
+        $this->shouldThrow(InvestmentAmountTooLarge::class)->during('addInvestment', [$investmentTwo]);
     }
 }
