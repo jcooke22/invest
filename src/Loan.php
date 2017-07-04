@@ -26,14 +26,21 @@ class Loan
     private $tranches;
     
     /**
+     * @var DateTime|null
+     */
+    private $currentTimeOverride;
+
+    /**
      * Loan constructor.
      * @param DateTime $startDate
      * @param DateTime $endDate
+     * @param DateTime|null $currentTimeOverride
      */
-    public function __construct(DateTime $startDate, DateTime $endDate)
+    public function __construct(DateTime $startDate, DateTime $endDate, DateTime $currentTimeOverride = null)
     {
         $this->startDate = $startDate;
         $this->endDate = $endDate;
+        $this->currentTimeOverride = $currentTimeOverride;
     }
 
     /**
@@ -60,6 +67,7 @@ class Loan
     public function addTranche(Tranche $tranche)
     {
         $this->tranches[] = $tranche;
+        $tranche->setLoan($this);
     }
 
     /**
@@ -75,6 +83,7 @@ class Loan
      */
     public function isOpen(): bool
     {
-        return time() >= $this->startDate->getTimestamp() && time() <= $this->endDate->getTimestamp();
+        $currentTime = !is_null($this->currentTimeOverride) ? $this->currentTimeOverride->getTimestamp() : time();
+        return $currentTime >= $this->startDate->getTimestamp() && $currentTime <= $this->endDate->getTimestamp();
     }
 }
