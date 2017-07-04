@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace spec\Invest;
 
+use Invest\Loan;
 use Invest\Tranche;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
@@ -20,16 +21,23 @@ class TrancheSpec extends ObjectBehavior
         // Act / Assert
         $this->name()->shouldReturn("A");
     }
-    
+
     function it_exposes_the_monthly_interest_rate()
     {
         // Act / Assert
         $this->monthlyInterestRate()->shouldReturn((float)3);
     }
-    
+
     function it_exposes_the_maximum_investment_amount()
     {
         // Act / Assert
         $this->maximumInvestmentAmount()->shouldReturn(1000.00);
+    }
+
+    function it_exposes_the_loan(Loan $loan)
+    {
+        // Act / Assert
+        $this->setLoan($loan);
+        $this->getLoan()->shouldReturn($loan);
     }
 }

@@ -19,6 +19,11 @@ class Tranche
      * @var float
      */
     private $maximumInvestmentAmount;
+    
+    /**
+     * @var Loan
+     */
+    private $loan;
 
     /**
      * Tranche constructor.
@@ -55,5 +60,21 @@ class Tranche
     public function maximumInvestmentAmount(): float 
     {
         return $this->maximumInvestmentAmount;
+    }
+
+    /**
+     * @param Loan $loan
+     */
+    public function setLoan(Loan $loan)
+    {
+        $this->loan = $loan;
+    }
+
+    /**
+     * @return Loan
+     */
+    public function getLoan()
+    {
+        return $this->loan;
     }
 }
