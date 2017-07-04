@@ -3,6 +3,7 @@
 namespace Invest;
 
 use Invest\Exception\InvestorInsufficientBalance;
+use Invest\Exception\LoanClosed;
 use Invest\Exception\VirtualWalletInsufficientBalance;
 
 class Investment
@@ -37,6 +38,11 @@ class Investment
         } catch (VirtualWalletInsufficientBalance $e) {
             throw new InvestorInsufficientBalance($e->getMessage());
         }
+        
+        if (!$tranche->getLoan()->isOpen()) {
+            throw new LoanClosed(sprintf('Cannot invest in tranche %s because it is closed', $tranche->name()));
+        }
+        
         $this->investor = $investor;
         $this->tranche = $tranche;
         $this->amount = $amount;
