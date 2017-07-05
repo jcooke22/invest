@@ -10,7 +10,7 @@ reached, further investments can't be made in that tranche.
 available amount was not reached and I have enough money in my virtual wallet.
 - At the end of the month we need to calculate the interest each investor is due to be paid.
 
-##Scenario
+## Scenario
 - Given a loan (start 01/10/2015 end 15/11/2015).
 - Given the loan has 2 tranches called A and B (3% and 6% interest rate) each with 1,000 pounds amount available.
 - Given each investor has 1,000 pounds in his virtual wallet.
