@@ -3,6 +3,7 @@
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use Invest\Investment;
 use Invest\Investor;
 use Invest\Loan;
 use Invest\Tranche;
@@ -24,6 +25,11 @@ class FeatureContext implements Context
     private $investors = [];
 
     /**
+     * @var Tranche[]
+     */
+    private $tranches = [];
+
+    /**
      * FeatureContext constructor.
      */
     public function __construct()
@@ -35,7 +41,7 @@ class FeatureContext implements Context
      */
     public function thereIsALoanWhichStartsOnAndEndsOn($startTime, $endTime)
     {
-        $this->loan = new Loan(new DateTime($startTime), new DateTime($endTime));
+        $this->loan = new Loan(new DateTime($startTime), new DateTime($endTime), new DateTime('2015-11-01'));
     }
 
     /**
@@ -43,7 +49,8 @@ class FeatureContext implements Context
      */
     public function theLoanHasATrancheNamedWithAnInterestRateOfAndAnInvestmentLimitOf£($name, $rate, $limit)
     {
-        $this->loan->addTranche(new Tranche($name, (float)$rate, $limit));
+        $this->tranches[$name] = new Tranche($name, (float)$rate, $limit);
+        $this->loan->addTranche($this->tranches[$name]);
     }
 
     /**
@@ -57,9 +64,11 @@ class FeatureContext implements Context
     /**
      * @When /^the investor named "([^"]*)" tries to invest £"([^"]*)" in tranche "([^"]*)" on "([^"]*)"$/
      */
-    public function theInvestorNamedTriesToInvest£InTrancheOn($arg1, $arg2, $arg3, $arg4)
+    public function theInvestorNamedTriesToInvest£InTrancheOn($investorName, $amount, $trancheName, $date)
     {
-        throw new PendingException();
+        new Investment(
+            $this->investors[$investorName], $this->tranches[$trancheName], $amount, new DateTime($date)
+        );
     }
 
     /**
