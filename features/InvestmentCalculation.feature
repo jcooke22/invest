@@ -4,7 +4,7 @@ Feature: Investment calculation
   I would like to run a report to generate the interest
 
   Scenario: Running an investment report
-    Given there is a loan which starts on "01/10/2015" and ends on "15/11/2015"
+    Given there is a loan which starts on "2015-10-01" and ends on "2015-11-15"
     And the loan has a tranche named "A" with an interest rate of "3"% and an investment limit of £"1000"
     And the loan has a tranche named "B" with an interest rate of "6"% and an investment limit of £"1000"
     And there is an investor named "1" who has £"1000" in their virtual wallet 

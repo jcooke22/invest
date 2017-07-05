@@ -3,6 +3,10 @@
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use Invest\Investor;
+use Invest\Loan;
+use Invest\Tranche;
+use Invest\VirtualWallet;
 
 /**
  * Defines application features from the specific context.
@@ -10,11 +14,17 @@ use Behat\Gherkin\Node\TableNode;
 class FeatureContext implements Context
 {
     /**
-     * Initializes context.
-     *
-     * Every scenario gets its own context instance.
-     * You can also pass arbitrary arguments to the
-     * context constructor through behat.yml.
+     * @var Loan
+     */
+    private $loan;
+
+    /**
+     * @var Investor[]
+     */
+    private $investors = [];
+
+    /**
+     * FeatureContext constructor.
      */
     public function __construct()
     {
@@ -23,25 +33,25 @@ class FeatureContext implements Context
     /**
      * @Given /^there is a loan which starts on "([^"]*)" and ends on "([^"]*)"$/
      */
-    public function thereIsALoanWhichStartsOnAndEndsOn($arg1, $arg2)
+    public function thereIsALoanWhichStartsOnAndEndsOn($startTime, $endTime)
     {
-        throw new PendingException();
+        $this->loan = new Loan(new DateTime($startTime), new DateTime($endTime));
     }
 
     /**
      * @Given /^the loan has a tranche named "([^"]*)" with an interest rate of "([^"]*)"% and an investment limit of £"([^"]*)"$/
      */
-    public function theLoanHasATrancheNamedWithAnInterestRateOfAndAnInvestmentLimitOf£($arg1, $arg2, $arg3)
+    public function theLoanHasATrancheNamedWithAnInterestRateOfAndAnInvestmentLimitOf£($name, $rate, $limit)
     {
-        throw new PendingException();
+        $this->loan->addTranche(new Tranche($name, (float)$rate, $limit));
     }
 
     /**
      * @Given /^there is an investor named "([^"]*)" who has £"([^"]*)" in their virtual wallet$/
      */
-    public function thereIsAnInvestorNamedWhoHas£InTheirVirtualWallet($arg1, $arg2)
+    public function thereIsAnInvestorNamedWhoHas£InTheirVirtualWallet($name, $amount)
     {
-        throw new PendingException();
+        $this->investors[$name] = new Investor($name, (new VirtualWallet())->add((float)$amount));
     }
 
     /**
