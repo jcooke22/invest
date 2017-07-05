@@ -2,6 +2,7 @@
 
 namespace Invest;
 
+use DateTime;
 use Invest\Exception\InvestorInsufficientBalance;
 use Invest\Exception\LoanClosed;
 use Invest\Exception\VirtualWalletInsufficientBalance;
@@ -22,16 +23,20 @@ class Investment
      * @var float
      */
     private $amount;
+    
+    /**
+     * @var DateTime
+     */
+    private $startDate;
 
     /**
      * Investment constructor.
      * @param Investor $investor
      * @param Tranche $tranche
      * @param float $amount
-     * 
-     * @throws InvestorInsufficientBalance
+     * @param DateTime $startDate
      */
-    public function __construct(Investor $investor, Tranche $tranche, float $amount)
+    public function __construct(Investor $investor, Tranche $tranche, float $amount, DateTime $startDate = null)
     {
         try {
             $investor->virtualWallet()->subtract($amount);
@@ -46,6 +51,7 @@ class Investment
         $this->investor = $investor;
         $this->tranche = $tranche;
         $this->amount = $amount;
+        $this->startDate = !is_null($startDate) ? $startDate : new DateTime();
     }
 
     /**
@@ -70,5 +76,13 @@ class Investment
     public function amount(): float 
     {
         return $this->amount;
+    }
+    
+    /**
+     * @return DateTime
+     */
+    public function startDate(): DateTime 
+    {
+        return $this->startDate;
     }
 }
