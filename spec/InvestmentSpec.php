@@ -26,6 +26,7 @@ class InvestmentSpec extends ObjectBehavior
         $investor->virtualWallet()->willReturn($virtualWallet);
         $tranche->getLoan()->willReturn($loan);
         $tranche->name()->willReturn('foo');
+        $tranche->addInvestment(Argument::any())->willReturn();
         $loan->isOpen()->willReturn(true);
         $this->beConstructedWith($investor, $tranche, 10000.21);
     }

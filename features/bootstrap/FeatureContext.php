@@ -6,6 +6,7 @@ use Behat\Gherkin\Node\TableNode;
 use Invest\Investment;
 use Invest\Investor;
 use Invest\Loan;
+use Invest\Service\Reporting;
 use Invest\Tranche;
 use Invest\VirtualWallet;
 
@@ -30,10 +31,21 @@ class FeatureContext implements Context
     private $tranches = [];
 
     /**
+     * @var Reporting
+     */
+    private $reportingService;
+
+    /**
+     * @var array
+     */
+    private $report;
+
+    /**
      * FeatureContext constructor.
      */
     public function __construct()
     {
+        $this->reportingService = new Reporting();
     }
 
     /**
@@ -62,36 +74,74 @@ class FeatureContext implements Context
     }
 
     /**
-     * @When /^the investor named "([^"]*)" tries to invest £"([^"]*)" in tranche "([^"]*)" on "([^"]*)"$/
+     * @When /^the investor named "([^"]*)" tries to invest £"([^"]*)" in tranche "([^"]*)" on "([^"]*)" with the result "([^"]*)"$/
      */
-    public function theInvestorNamedTriesToInvest£InTrancheOn($investorName, $amount, $trancheName, $date)
-    {
-        new Investment(
-            $this->investors[$investorName], $this->tranches[$trancheName], $amount, new DateTime($date)
-        );
+    public function theInvestorNamedTriesToInvest£InTrancheOnWithTheResult(
+        $investorName,
+        $amount,
+        $trancheName,
+        $date,
+        $result
+    ) {
+        switch ($result) {
+            case 'success':
+                new Investment(
+                    $this->investors[$investorName], $this->tranches[$trancheName], $amount, new DateTime($date)
+                );
+                break;
+            case 'exception':
+                try {
+                    new Investment(
+                        $this->investors[$investorName], $this->tranches[$trancheName], $amount, new DateTime($date)
+                    );
+                } catch (Exception $e) {
+
+                } finally {
+                    if (!isset($e)) {
+                        throw new Exception('Expecting exception but none thrown');
+                    }
+                }
+                break;
+        }
+
     }
 
     /**
      * @Given /^the accounts clerk runs the investment calculation report on for the period "([^"]*)" \- "([^"]*)"$/
      */
-    public function theAccountsClerkRunsTheInvestmentCalculationReportOnForThePeriod($arg1, $arg2)
+    public function theAccountsClerkRunsTheInvestmentCalculationReportOnForThePeriod($startDate, $endDate)
     {
-        throw new PendingException();
-    }
-
-    /**
-     * @Then /^the investor named "([^"]*)" was "([^"]*)" to successfully invest$/
-     */
-    public function theInvestorNamedWasToSuccessfullyInvest($arg1, $arg2)
-    {
-        throw new PendingException();
+        $this->report = $this->reportingService->generateInvestmentReport(
+            $this->loan,
+            new DateTime($startDate),
+            new DateTime($endDate)
+        );
     }
 
     /**
      * @Given /^the investment report indicates that investor "([^"]*)" earns £"([^"]*)"$/
      */
-    public function theInvestmentReportIndicatesThatInvestorEarns£($arg1, $arg2)
+    public function theInvestmentReportIndicatesThatInvestorEarns£($investorName, $expectedEarnings)
     {
-        throw new PendingException();
+        $success = false;
+        $actualEarnings = null;
+        foreach ($this->report as $reportLine) {
+            if ($reportLine['investor']->name() === $investorName) {
+                $actualEarnings = (float)$reportLine['amount_earned'];
+                if ((float)$expectedEarnings === $actualEarnings) {
+                    $success = true;
+                }
+            }
+        }
+
+        if (!$success && isset($actualEarnings)) {
+            throw new Exception(
+                sprintf('Earnings expected were %s. Actual were %s', $expectedEarnings, $actualEarnings)
+            );
+        }
+        if (!$success) {
+            throw new Exception(sprintf('Earnings expected were %s', $expectedEarnings));
+        }
+
     }
 }

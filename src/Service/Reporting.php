@@ -7,6 +7,8 @@ use Invest\Loan;
 
 class Reporting
 {
+    const PRECISION = 2;
+
     /**
      * @param Loan $loan
      * @param DateTime $startDate
@@ -14,7 +16,7 @@ class Reporting
      *
      * @return array
      */
-    public function generateInvestmentReport(Loan $loan, DateTime $startDate, DateTime $endDate)
+    public function generateInvestmentReport(Loan $loan, DateTime $startDate, DateTime $endDate): array
     {
         // @todo - Refactor this into smaller private methods
         // @todo - Replace native PHP operators with BC Math operations to ensure no precision loss
@@ -30,8 +32,8 @@ class Reporting
                             CAL_GREGORIAN,
                             $startDate->format('n'),
                             $startDate->format('Y')
-                        )) * (($endDate->diff($investment->startDate()))->d - 1);
-
+                        )) * (($endDate->diff($investment->startDate()))->d + 1);
+                $reportLine['amount_earned'] = round($reportLine['amount_earned'], static::PRECISION);
                 $report[] = $reportLine; 
                 
             }

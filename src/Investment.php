@@ -52,6 +52,7 @@ class Investment
         $this->tranche = $tranche;
         $this->amount = $amount;
         $this->startDate = !is_null($startDate) ? $startDate : new DateTime();
+        $this->tranche->addInvestment($this);
     }
 
     /**
