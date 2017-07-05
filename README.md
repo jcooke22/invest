@@ -57,3 +57,14 @@ Tests can be executed by the following command...
 ./bin/behat
 ```
 ![Behat](/images/behat.png?raw=true "Behat")
+
+
+## Further considerations
+
+### Reporting service
+- Refactor the service into smaller private methods
+- Replace native PHP arithmetic operators with BC Math operations to ensure no precision loss
+- Instead of returning an array, instead return a value object which better represents a report
+
+### Behat tests
+- Break up the existing tests into smaller, more focused features
